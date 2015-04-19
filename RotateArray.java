@@ -1,8 +1,6 @@
 /*
 Rotate an array of n elements to the right by k steps.
-
 For example, with n = 7 and k = 3, the array [1,2,3,4,5,6,7] is rotated to [5,6,7,1,2,3,4].
-
 Note:
 Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
 */
@@ -11,7 +9,11 @@ Try to come up as many solutions as you can, there are at least 3 different ways
 1. whole array
 2. first k
 3. left length-k
+be care of the case when k>nums.length. easily find out that the result is the same as when k = k%nums.length...
+simple test cases analysis always good way to find a pattern...
 */
+
+// TC:O(n)  SC:O(1)
 public class Solution {
     public void rotate(int[] nums, int k) {
         if(nums==null || nums.length==0){
