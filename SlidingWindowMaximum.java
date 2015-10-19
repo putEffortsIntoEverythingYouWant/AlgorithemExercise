@@ -21,6 +21,11 @@ Follow up:
 Could you solve it in linear time?
 */
 public class Solution {
+    /*
+    points learnt: when doing both push and poll, think of double ned queue
+    if there is a limit on relative indexes, think of storing index instead of real num
+    make sure check if queue empty
+    */
     //use double end queque (ArrayDeque or LinkedList) to store the index
     //pollfirst the element that out of current window of K
     //polllast the element that are smaller than current element that are being pushed into queue

@@ -12,70 +12,55 @@ Some examples:
 Note: Do not use the eval built-in library function.
 */
 public class Solution {
-    //calculate * / as high priority just like it's wrapped by parenthesis
     public int calculate(String s) {
         if(s==null || s.length()==0){
             return 0;
         }
-        int start =0;
-        int end = 0;
-        int length = s.length();
-        Stack<String> stack = new Stack<String>();
-        boolean cal = false;
-        while(end<length){
-            char current = s.charAt(end);
-            if(current=='+' || current=='-' || current=='*' || current=='/'){
-                String num = s.substring(start,end).trim();
+        s=s.trim();//need to trim to eliminate the white space in front and at the end
+        //other wise, "5  " will create trouble because it has opsTemp.length==2, which can't be distinguished from real case "5+5" (also opsTemp.length==2)
+        /*
+        "9" give []
+        "9  " give [,  ]
+        "  9" give [ ]
+        "1+1" give [,+]
+        if basically if anything after not empty, will be an empty element in front.
+        */
+        Stack<Integer> stack = new Stack<Integer>();
+        String [] nums = s.split("\\+|\\-|\\*|\\/");
+        String [] opsTemp = s.split("\\d+");
+        
+        if(opsTemp.length==0){
+            return Integer.parseInt(nums[0].trim());
+        }
+        
+        char [] ops = new char [opsTemp.length-1];
+            for(int i=1; i<opsTemp.length; i++){
+                ops[i-1] = opsTemp[i].trim().charAt(0);
+            }
+        
+        stack.push(Integer.parseInt(nums[0].trim()));
+        for(int i=0; i<ops.length; i++){
+            if(ops[i]=='+' || ops[i]=='-'){
+                int num = Integer.parseInt(nums[i+1].trim());
+                if(ops[i]=='-'){
+                    num = 0-num;
+                }
                 stack.push(num);
-                if(cal){
-                    stack.push(String.valueOf(partlyCal(stack)));
-                    cal = false;
-                }
-                stack.push(String.valueOf(current));
-                if(current=='*' || current=='/'){
-                    cal = true;
-                }
-                start = end+1;
-            }
-            end++;
-        }
-        String last = s.substring(start,end).trim();//must be a number
-        //stack peek must be a symbol
-        //if it's * or / then calculate it, push it in, 
-        //then all left elements in stack should be + or -
-            int sum = 0;
-            if(stack.empty()){
-                sum = Integer.parseInt(last);
-            }else if(stack.peek().equals("*") || stack.peek().equals("/")){
-                stack.push(last);
-                stack.push(String.valueOf(partlyCal(stack)));
             }else{
-                stack.push(last);
-            }
-    
-        while(!stack.empty()){
-            String num = stack.pop();
-            if(!num.equals("+") && ! num.equals("-")){
-                if(!stack.empty() && stack.peek().equals("-")){
-                    sum-=Integer.parseInt(num);
-                }else{
-                    sum+=Integer.parseInt(num);
+                Integer prev = stack.pop();
+                Integer next = Integer.parseInt(nums[i+1].trim());
+                if(ops[i]=='*'){
+                    stack.push(prev*next);
+                    
+                }else if(ops[i]=='/'){
+                    stack.push(prev/next);
                 }
             }
-            
         }
-        return sum;
-    }
-    public int partlyCal(Stack<String> stack){
-        Integer num1 = Integer.parseInt(stack.pop());
-        String symbol = stack.pop();
-        Integer num2 = Integer.parseInt(stack.pop());
-        if(symbol.equals("*")){
-            return num1*num2;
+        int result = 0;
+        while(!stack.empty()){
+            result+=stack.pop();
         }
-        if(symbol.equals("/")){
-            return num2/num1;
-        }
-        return 0;//should never get called
+        return result;
     }
 }

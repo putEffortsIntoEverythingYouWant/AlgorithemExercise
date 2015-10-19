@@ -10,41 +10,27 @@ More practice:
 If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log n).
 */
 public class Solution {
-    //O(n) since each element will be scanned once
-    //if current sum < s , end pointer forward to add more
-    //if current sum >= s, compare minLength, forward start pointer to lower the value
+
     public int minSubArrayLen(int s, int[] nums) {
-        if(nums == null || nums.length==0){
+       if(nums==null){
             return 0;
         }
+        int length = Integer.MAX_VALUE;
         int start = 0;
         int end = 0;
-        int minStart = 0;
-        int minLength = Integer.MAX_VALUE;
         int sum = 0;
-        boolean deductMode = false;
-        while(start<=end && end<nums.length){
-            if(!deductMode){
-                sum+=nums[end];
-            }else{
-                sum-=nums[start-1];
-            }
-            if(sum<s){
-                end++;
-                deductMode = false;
-                continue;
-            }else{//it's end-start+1 not end-start
-                if((end-start+1)<=minLength){
-                    minLength = end-start+1;
-                    minStart = start;
-                }
+        while(end<nums.length){
+            sum+=nums[end];
+            while(sum>=s){//since it's sum>=s, so we can update for each possible case, no need to wait for the mini one,
+                length = Math.min(length,end-start+1);
+                sum-=nums[start];
                 start++;
-                deductMode = true;
             }
+            end++;
         }
-        if(minLength==Integer.MAX_VALUE){
+        if(length==Integer.MAX_VALUE){
             return 0;
         }
-        return minLength;
+        return length;
     }
 }
