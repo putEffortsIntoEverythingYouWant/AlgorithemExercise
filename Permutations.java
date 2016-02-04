@@ -1,40 +1,51 @@
 /*
-Given a collection of numbers, return all possible permutations.
+Given a list of numbers, return all possible permutations.
+Example
+For nums = [1,2,3], the permutations are:
 
-For example,
-[1,2,3] have the following permutations:
-[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+Challenge
+Do it without recursion.
 */
-public class Solution {
-    /*
-    very useful solution to make a boolean[] visited...very useful when it comes to path or permutation problems
-    */
-    public List<List<Integer>> permute(int[] nums) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        if(nums == null || nums.length == 0){
+class Solution {
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> nums) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        if(nums==null || nums.isEmpty()){
             return result;
         }
-        List<Integer> current = new ArrayList<Integer>();
-        boolean [] visited = new boolean[nums.length];
-        permutate(nums,result,current,visited);
+        boolean [] visited = new boolean [nums.size()];
+        perm(nums,new ArrayList<Integer>(),result,visited);
         return result;
     }
     
-    public void permutate(int [] nums,  List<List<Integer>> result, List<Integer> current, boolean[]visited){
-        if(current.size()==nums.length){
-            List<Integer> copy = new ArrayList<Integer>();
+    public void perm(ArrayList<Integer> nums, ArrayList<Integer> current, ArrayList<ArrayList<Integer>> result, boolean [] visited){
+        if(current.size()==visited.length){
+            ArrayList<Integer> copy = new ArrayList<Integer>();
             copy.addAll(current);
             result.add(copy);
             return;
         }
-        for(int i=0; i<nums.length; i++){
-            if(visited[i] == false){//qualified
+        for(int i=0; i<visited.length; i++){
+            if(visited[i]==false){
                 visited[i] = true;
-                current.add(nums[i]);
-                permutate(nums,result,current,visited);
-                visited[i]=false;
-                current.remove(current.size()-1);//guaranteed always be the last one, since following element would've already been removed
+                current.add(nums.get(i));
+                perm(nums,current,result,visited);
+                visited[i] = false;
+                current.remove(current.size()-1);
             }
         }
     }
+    
 }

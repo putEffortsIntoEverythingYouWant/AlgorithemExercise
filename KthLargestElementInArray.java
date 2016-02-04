@@ -7,45 +7,45 @@ Given [3,2,1,5,6,4] and k = 2, return 5.
 Note: 
 You may assume k is always valid, 1 ≤ k ≤ array's length.
 */
-public class Solution {
-    public int findKthLargest(int[] nums, int k) {
-        if(nums==null || k<=0){
-            return 0;
-        }
-        return find(nums,nums.length-k,0,nums.length-1);
-   
+class Solution {
+    //param k : description of k
+    //param numbers : array of numbers
+    //return: description of return
+    public int kthLargestElement(int k, ArrayList<Integer> numbers) {
+        // write your code here
+        int left = 0;
+        int right = numbers.size()-1;
+        return kthElement(numbers.size()-k,left,right,numbers);
+       
     }
-    
-    public int find (int [] nums, int index, int start, int end){
-        int left = start;
-        int right = end;
-        int pivot = nums[end];
-        
+    public int kthElement(int k, int left, int right, ArrayList<Integer> numbers){
+        int start = left;
+        int end = right;
+         int pivot = numbers.get(right);
         while(left<right){
-            while(nums[left]<pivot && left<right){
+            while(numbers.get(left)<pivot && left<right){
                 left++;
             }
-            while(nums[right]>=pivot && right>left){
+            while(numbers.get(right)>=pivot && right>left){
                 right--;
             }
-            if(left>=right){
-                break;
-            }
-            swap(nums,left,right);
+
+            swap(left,right,numbers);
         }
-        swap(nums,left,end);
-        if(left==index){
-            return pivot;
+        swap(left,end,numbers);
+        if(left==k){
+            return numbers.get(left);
         }
-        if(left>index){
-            return find(nums,index,start,left-1);
+        else if(left>k){
+            return kthElement(k,start,left-1,numbers);
+        }else{
+            return kthElement(k,left+1,end,numbers);
         }
-        return find(nums,index,left+1,end);
         
     }
-    public void swap(int [] nums, int i, int j){
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+    public void swap(int p1, int p2, ArrayList<Integer> numbers){
+        int temp = numbers.get(p1);
+        numbers.set(p1,numbers.get(p2));
+        numbers.set(p2,temp);
     }
-}
+};

@@ -1,40 +1,47 @@
 /*
-Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+min stack
+Implement a stack with min() function, which will return the smallest number in the stack.
 
-push(x) -- Push element x onto stack.
-pop() -- Removes the element on top of the stack.
-top() -- Get the top element.
-getMin() -- Retrieve the minimum element in the stack.
+It should support push, pop and min operation all in O(1) cost.
+
+push(1)
+pop()   // return 1
+push(2)
+push(3)
+min()   // return 2
+push(1)
+min()   // return 1
+Note
+min operation will never be called if there is no number in the stack.
+
 */
-class MinStack {
-    //when compare Integer with Integer, remember to use .intValue() == or equals, because integer == integer only works from -128 to 127. JVM caches small interger numbers so that -128 - 127 reference point to the same. numbers out of this range == will fail because reference points to diff objects even though the int value is the same
-    Stack <Integer> elements = new Stack<Integer>();
-    Stack <Integer> mins = new Stack<Integer>();
-    public void push(int x) {
-        elements.push(x);
-        if(mins.empty() || mins.peek().intValue()>=x){
-            mins.push(x);
+public class MinStack {
+    
+    Stack<Integer> stack = new Stack<Integer>();
+    Stack<Integer> min = new Stack<Integer>();
+    public MinStack() {
+        // do initialize if necessary
+    }
+
+    public void push(int number) {
+        // write your code here
+        stack.push(number);
+        if(min.isEmpty()|| min.peek()>=number){
+            min.push(number);
         }
     }
 
-    public void pop() {
-        if(!mins.empty() && mins.peek().intValue() == elements.peek().intValue()){
-            mins.pop();
+    public int pop() {
+        // write your code here
+        int num = stack.pop();
+        if(num==min.peek()){
+            min.pop();
         }
-        elements.pop();
+        return num;
     }
 
-    public int top() {
-        if(!elements.empty()){
-            return elements.peek();
-        }
-        return Integer.MIN_VALUE;
-    }
-
-    public int getMin() {
-        if(!mins.empty()){
-            return mins.peek();
-        }
-        return Integer.MIN_VALUE;
+    public int min() {
+        // write your code here
+        return min.peek();
     }
 }
