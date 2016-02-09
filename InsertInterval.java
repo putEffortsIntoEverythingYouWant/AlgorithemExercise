@@ -12,38 +12,44 @@ Given [1,2],[3,5],[6,7],[8,10],[12,16], insert and merge [4,9] in as [1,2],[3,10
 This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 */
 /**
- * Definition for an interval.
- * public class Interval {
- *     int start;
- *     int end;
- *     Interval() { start = 0; end = 0; }
- *     Interval(int s, int e) { start = s; end = e; }
- * }
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
  */
-public class Solution {
-    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-        List<Interval> results = new ArrayList<Interval>();
-        if(intervals == null || intervals.isEmpty()){
-            results.add(newInterval);
-            return results;
+
+class Solution {
+    /**
+     * Insert newInterval into intervals.
+     * @param intervals: Sorted interval list.
+     * @param newInterval: A new interval.
+     * @return: A new sorted interval list.
+     */
+    public ArrayList<Interval> insert(ArrayList<Interval> intervals, Interval newInterval) {
+        ArrayList<Interval> result = new ArrayList<Interval>();
+        // write your code here
+        if(intervals==null){
+            result.add(newInterval);
+            return result;
         }
         for(Interval interval: intervals){
-            //old<new
-            if(interval.end < newInterval.start){
-                results.add(interval);
-                continue;
-            }
-            //old>new
-            if(newInterval.end < interval.start){
-                results.add(newInterval);
+            if(newInterval.end<interval.start){
+                Interval copy = new Interval(newInterval.start,newInterval.end);
+                result.add(copy);
                 newInterval = interval;
-                continue;
+            }else if(newInterval.start>interval.end){
+                result.add(interval);
+            }else{
+                newInterval.start = Math.min(newInterval.start,interval.start);
+                newInterval.end = Math.max(newInterval.end, interval.end);
             }
-            //merge
-            newInterval = new Interval(Math.min(interval.start,newInterval.start),Math.max(interval.end,newInterval.end));
-            
         }
-        results.add(newInterval);
-        return results;
+        //no matter what case, newInterval always left out
+        result.add(newInterval);
+        
+        return result;
     }
 }

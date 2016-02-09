@@ -24,6 +24,8 @@ public class Solution {
         if(nums == null || nums.length==0){
             return result;
         }
+        //List<Integer> numbers = Arrays.asList(nums);//doesn't work on primitive type
+        //Collections.sort(numbers);
         Arrays.sort(nums);
         subset(nums,new ArrayList<Integer>(),result,0);
         return result;

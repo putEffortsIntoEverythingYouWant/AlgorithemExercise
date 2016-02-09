@@ -10,39 +10,59 @@ When s3 = "aadbbcbcac", return true.
 When s3 = "aadbbbaccc", return false.
 */
 public class Solution {
+    /**
+     * Determine whether s3 is formed by interleaving of s1 and s2.
+     * @param s1, s2, s3: As description.
+     * @return: true or false.
+     */
+     /*
+     two dimension to store from index i in s1, j in s2, is it able to form s3
+     remember to initialize the value of 01 and 10...
+     i, j is length, not index, easier to initialize, because i==0 || j==0 means not using any from s1 or s2
+     */
     public boolean isInterleave(String s1, String s2, String s3) {
-        //match[i][j] means if it matched with substr1 of length i from s1and subtr2 of length j from s2
-        if(s1==null && s2==null){
-            if(s3==null){
-                return true;
-            }else{
-                return false;
-            }
+        // write your code here
+        
+        if(s1==null && s2==null && s3==null){
+            return true;
         }
-        if(s1==null || s2==null){
-            if((s1==null && s2.equals(s3))||(s2==null && s1.equals(s3))){
-                return true;
-            }else{
-                return false;
-            }
-        }
-        int length1 = s1.length();
-        int length2 = s2.length();
-        if(length1+length2 != s3.length()){
+        if((s1==null || s2==null ) && s3!=null){
             return false;
         }
-        boolean [][] match = new boolean [length1+1][length2+1];
-        for(int row = 0; row<length1+1; row++){
-            match[row][0] = s3.substring(0,row).equals(s1.substring(0,row));
+        if(s1!=null && s2!=null && s3==null){
+            return false;
         }
-        for(int col = 0; col<length2+1; col++){
-            match[0][col] = s3.substring(0,col).equals(s2.substring(0,col));
+        if(s1.length() + s2.length()!=s3.length()){
+            return false;
         }
-        for(int i = 1;i<length1+1; i++){
-            for(int j=1; j<length2+1; j++){
-                match[i][j] = (match[i][j-1]&& s3.charAt(i+j-1)==s2.charAt(j-1)) || (match[i-1][j] && s3.charAt(i+j-1)==s1.charAt(i-1));
+        
+        boolean [][] able = new boolean [s1.length()+1][s2.length()+1];
+        able[0][0] = true;
+        for(int i=1; i<able.length; i++){
+            if(able[i-1][0] && s1.charAt(i-1)==s3.charAt(i-1)){
+                able[i][0]=true;
+            }else{//no need to proceed
+                break;
             }
         }
-        return match[length1][length2];
+        for(int i=1; i<able[0].length; i++){
+            if(able[0][i-1] && s2.charAt(i-1)==s3.charAt(i-1)){
+                able[0][i]=true;
+            }else{
+                break;
+            }
+        }
+        for(int i=1; i<able.length; i++){
+            for(int j=1; j<able[0].length; j++){
+                if((able[i-1][j] && s3.charAt(i+j-1)==s1.charAt(i-1)) 
+                || (able[i][j-1] && s3.charAt(i+j-1)==s2.charAt(j-1))){
+                    able[i][j]=true;
+                }
+            }
+        }
+        
+        
+        
+        return able[s1.length()][s2.length()];
     }
 }
